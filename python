@@ -1,1 +1,50 @@
+class Produto:
+    def __init__(self, id, nome, preco, estoque):
+        self.id = id
+        self.nome = nome
+        self.preco = preco
+        self.estoque = estoque
 
+class SisVenda:
+    def __init__(self):
+        self.produtos = {}
+        self.vendas_realizadas = []
+
+    def cadastrar_produto(self, id, nome, preco, estoque):
+        self.produtos[id] = Produto(id, nome, preco, estoque)
+        print(f"Produto '{nome}' cadastrado com sucesso!")
+
+    def exibir_estoque(self):
+        print("\n--- Estoque Atual ---")
+        for p in self.produtos.values():
+            print(f"ID: {p.id} | Nome: {p.nome} | Preço: R${p.preco:.2f} | Qtd: {p.estoque}")
+        print("----------------------")
+
+    def realizar_venda(self, id_produto, quantidade):
+        if id_produto in self.produtos:
+            produto = self.produtos[id_produto]
+            if produto.estoque >= quantidade:
+                produto.estoque -= quantidade
+                total = quantidade * produto.preco
+                self.vendas_realizadas.append({"item": produto.nome, "qtd": quantidade, "total": total})
+                print(f"Venda concluída! Total: R${total:.2f}")
+            else:
+                print("Erro: Estoque insuficiente.")
+        else:
+            print("Erro: Produto não encontrado.")
+
+# --- Testando o Sistema ---
+sistema = SisVenda()
+
+# 1. Cadastrar alguns itens
+sistema.cadastrar_produto(1, "Notebook", 3500.00, 10)
+sistema.cadastrar_produto(2, "Mouse Gamer", 150.00, 50)
+
+# 2. Ver estoque
+sistema.exibir_estoque()
+
+# 3. Simular uma venda
+sistema.realizar_venda(1, 2)  # Vendendo 2 notebooks
+
+# 4. Ver estoque atualizado
+sistema.exibir_estoque()
